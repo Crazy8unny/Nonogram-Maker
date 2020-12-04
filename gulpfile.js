@@ -1,7 +1,7 @@
-const gulp    = require('gulp')
-const plumber = require('gulp-plumber')
-const babel   = require('gulp-babel')
-const bro     = require('gulp-bro')
+let gulp    = require('gulp')
+let plumber = require('gulp-plumber')
+let babel   = require('gulp-babel')
+let bro     = require('gulp-bro')
 
 gulp.task('js', function() {
   gulp.src('src/app.js')

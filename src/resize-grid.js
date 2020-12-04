@@ -1,13 +1,13 @@
 function resizeGrid(cols, rows, grid) {
 
   if (grid[0].length < cols) {
-    for (const y in grid) {
+    for (let y in grid) {
       for (let x = 0; x < cols; x++) {
         if (grid[y][x] == undefined) grid[y][x] = 0
       }
     }
   } else if (grid[0].length > cols) {
-    for (const y in grid) {
+    for (let y in grid) {
       grid[y] = grid[y].slice(0, cols)
     }
   }

@@ -2,15 +2,15 @@ function drawInputGrid(grid, canvas, ctx) {
 
   canvas.width = canvas.width
 
-  const dim = Math.floor( 
+  let dim = Math.floor( 
     grid[0].length >= grid.length 
     ? canvas.width / grid[0].length
     : canvas.height / grid.length
   )
 
   // Cells
-  for (const y in grid) {
-    for (const x in grid[y]) {
+  for (let y in grid) {
+    for (let x in grid[y]) {
 
       ctx.strokeStyle = '#686868'
       ctx.lineWidth = 1.5

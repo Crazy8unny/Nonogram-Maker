@@ -1,8 +1,8 @@
 function generateClues(rows) {
 
-  const cols = []
-  for (const y in rows) {
-    for (const x in rows[y]) {
+  let cols = []
+  for (let y in rows) {
+    for (let x in rows[y]) {
       if (!cols[x]) cols[x] = []
       cols[x][y] = rows[y][x]
     }

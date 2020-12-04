@@ -1,29 +1,34 @@
-const drawInputGrid         = require('./draw-input-grid')
-const drawOutputGrid        = require('./draw-output-grid')
-const solver                = require('./solver')
-const generateClues         = require('./generate-clues')
-const handleMouseEvent      = require('./handle-mouse-event')
-const resizeGrid            = require('./resize-grid')
-const exportGrid            = require('./export-grid')
-const generateGridFromImage = require('./generate-grid-from-image')
+let drawInputGrid         = require('./draw-input-grid')
+let drawOutputGrid        = require('./draw-output-grid')
+let solver                = require('./solver')
+let generateClues         = require('./generate-clues')
+let handleMouseEvent      = require('./handle-mouse-event')
+let resizeGrid            = require('./resize-grid')
+let exportGrid            = require('./export-grid')
+let importGrid            = require('./import-grid')
+let generateGridFromImage = require('./generate-grid-from-image')
 
-const container = document.getElementById('container')
 
-const widthInput  = container.querySelector('input[name="width"]')
-const heightInput = container.querySelector('input[name="height"]')
-const fileInput   = container.querySelector('input[name="file"]')
+let container = document.getElementById('container')
 
-const clearBtn      = container.querySelector('button[name="clear"]')
-const invertBtn     = container.querySelector('button[name="invert"]')
-const imageBtn      = container.querySelector('button[name="image"]')
-const exportJSONBtn = container.querySelector('button[name="export-json"]')
-const exportPNGBtn  = container.querySelector('button[name="export-png"]')
+let widthInput  = container.querySelector('input[name="width"]')
+let heightInput = container.querySelector('input[name="height"]')
+let fileInput   = container.querySelector('input[name="file"]')
 
-const inputCanvas  = container.querySelector('#input-grid canvas') 
-const outputCanvas = container.querySelector('#output-grid canvas')
+let clearBtn      = container.querySelector('button[name="clear"]')
+let invertBtn     = container.querySelector('button[name="invert"]')
+let imageBtn      = container.querySelector('button[name="image"]')
+let exportJSONBtn = container.querySelector('button[name="export-json"]')
+let exportPNGBtn  = container.querySelector('button[name="export-png"]')
+let importJSONBtn  = container.querySelector('button[name="import-json"]')
+let solveModeBtn  = container.querySelector('button[name="solve-mode"]')
 
-const inputCtx  = inputCanvas.getContext('2d')
-const outputCtx = outputCanvas.getContext('2d')
+
+let inputCanvas  = container.querySelector('#input-grid canvas') 
+let outputCanvas = container.querySelector('#output-grid canvas')
+
+let inputCtx  = inputCanvas.getContext('2d')
+let outputCtx = outputCanvas.getContext('2d')
 
 let grid = [
   [0,0,0,1,1,1,1,0,0,0],
@@ -90,7 +95,7 @@ fileInput.addEventListener('change', function(e) {
 
   if (!e.target.files.length || !e.target.accept.includes(e.target.files[0].type)) return
 
-  const fr = new FileReader()
+  let fr = new FileReader()
 
   fr.addEventListener('load', async function() {
     grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
@@ -99,6 +104,20 @@ fileInput.addEventListener('change', function(e) {
 
   fr.readAsDataURL(e.target.files[0])
 
+})
+
+importJSONBtn.addEventListener('click', function(e) {
+  
+  if (!e.target.files.length || !e.target.accept.includes(e.target.files[0].type)) return
+
+  let fr = new FileReader()
+
+  fr.addEventListener('load', async function() {
+    grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
+    calculate()
+  })
+
+  fr.readAsDataURL(e.target.files[0])
 })
 
 exportPNGBtn.addEventListener('click', function(e) {
@@ -113,7 +132,7 @@ function calculate() {
   container.classList.add('calculating')
 
   setTimeout(function() {
-    const { horizontalClues, verticalClues } = generateClues(grid)
+    let { horizontalClues, verticalClues } = generateClues(grid)
 
     solver(grid[0].length, grid.length, horizontalClues, verticalClues)
       .then(solvedGrid => {
@@ -124,8 +143,8 @@ function calculate() {
 }
 
 async function init() {
-  const { horizontalClues, verticalClues } = generateClues(grid)
-  const solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
+  let { horizontalClues, verticalClues } = generateClues(grid)
+  let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
   
   drawInputGrid(grid, inputCanvas, inputCtx)
   drawOutputGrid(solvedGrid, horizontalClues, verticalClues, outputCanvas, outputCtx)

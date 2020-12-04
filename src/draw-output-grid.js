@@ -2,7 +2,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
   canvas.width = canvas.width
 
-  const dim = Math.floor(
+  let dim = Math.floor(
     grid[0].length >= grid.length
     ? canvas.width  / (grid[0].length * 1.5)
     : canvas.height / (grid.length * 1.5)
@@ -13,8 +13,8 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   // Cells
-  for (const y in grid) {
-    for (const x in grid[y]) {
+  for (let y in grid) {
+    for (let x in grid[y]) {
 
       ctx.strokeStyle = '#686868'
       ctx.strokeRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
@@ -64,7 +64,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
   }
 
   // Horizontal clues
-  for (const y in grid) {
+  for (let y in grid) {
     horizontalClues[y].reverse()
     for (let x = 0; x < grid[y].length / 2; x++) {
 
@@ -100,7 +100,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
   }
 
   // Vertical clues
-  for (const x in grid[0]) {
+  for (let x in grid[0]) {
     verticalClues[x].reverse()
     for (let y = 0; y < grid.length / 2; y++) {
 

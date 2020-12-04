@@ -68,7 +68,7 @@ input {
   padding: 5px;
 }
 
-#file {
+#file, #jsonFile {
   display: none;
 }
 
