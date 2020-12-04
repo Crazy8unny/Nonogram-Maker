@@ -10,7 +10,7 @@ function handleMouseEvent(e, grid, width, height) {
         e.offsetX > x * dim && e.offsetX < x * dim + dim && 
         e.offsetY > y * dim && e.offsetY < y * dim + dim
       ) {
-        grid[y][x] = e.buttons === 1 ? 1 : 0
+        grid[y][x] = e.buttons == 1 ? 1 : 0
       }
     }
   }

@@ -82,7 +82,7 @@ clearBtn.addEventListener( 'click', function(e) {
 })
 
 invertBtn.addEventListener('click', function(e) {
-  grid = grid.map(row => row.map(cell => cell === 1 ? 0 : 1))
+  grid = grid.map(row => row.map(cell => cell == 1 ? 0 : 1))
   drawInputGrid(grid, inputCanvas, inputCtx)
   calculate()
 })

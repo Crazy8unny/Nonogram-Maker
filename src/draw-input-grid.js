@@ -16,7 +16,7 @@ function drawInputGrid(grid, canvas, ctx) {
       ctx.lineWidth = 1.5
       ctx.strokeRect(x * dim, y * dim, dim, dim)
 
-      if (grid[y][x] === 1) {
+      if (grid[y][x] == 1) {
         ctx.fillStyle = '#000000'
         ctx.fillRect(x * dim, y * dim, dim, dim)
       }

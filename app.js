@@ -83,7 +83,7 @@
     })
 
     invertBtn.addEventListener('click', function (e) {
-      grid = grid.map(row => row.map(cell => cell === 1 ? 0 : 1))
+      grid = grid.map(row => row.map(cell => cell == 1 ? 0 : 1))
       drawInputGrid(grid, inputCanvas, inputCtx)
       calculate()
     })
@@ -100,11 +100,12 @@
 
       fr.addEventListener('load', async function () {
         grid = await generateGridFromJson(fr.result)
+        drawInputGrid(grid, inputCanvas, inputCtx)
         calculate()
       })
 
       fr.readAsText(e.target.files[0])
-
+      jsonInput.value = "";
     })
 
     imageBtn.addEventListener('click', function (e) {
@@ -119,10 +120,12 @@
 
       fr.addEventListener('load', async function () {
         grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
+        drawInputGrid(grid, inputCanvas, inputCtx)
         calculate()
       })
 
       fr.readAsDataURL(e.target.files[0])
+      fileInput.value = "";
     })
 
     exportPNGBtn.addEventListener('click', function (e) {
@@ -175,7 +178,7 @@
           ctx.lineWidth = 1.5
           ctx.strokeRect(x * dim, y * dim, dim, dim)
 
-          if (grid[y][x] === 1) {
+          if (grid[y][x] == 1) {
             ctx.fillStyle = '#000000'
             ctx.fillRect(x * dim, y * dim, dim, dim)
           }
@@ -228,7 +231,7 @@
 
           ctx.fillRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
 
-          if (grid[y][x] === 2) {
+          if (grid[y][x] == 2) {
             ctx.beginPath()
             ctx.strokeStyle = '#FF0000'
             ctx.moveTo(
@@ -261,7 +264,7 @@
         horizontalClues[y].reverse()
         for (let x = 0; x < grid[y].length / 2; x++) {
 
-          ctx.fillStyle = y % 2 === 0 ? '#DDDDDD' : '#EAEAEA'
+          ctx.fillStyle = y % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
           ctx.fillRect(
             canvas.width / 3 - x * dim - dim,
             canvas.height / 3 + y * dim,
@@ -297,7 +300,7 @@
         verticalClues[x].reverse()
         for (let y = 0; y < grid.length / 2; y++) {
 
-          ctx.fillStyle = x % 2 === 0 ? '#DDDDDD' : '#EAEAEA'
+          ctx.fillStyle = x % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
           ctx.fillRect(
             canvas.width / 3 + x * dim,
             canvas.height / 3 - y * dim - dim,
@@ -329,7 +332,7 @@
 
       // Deviders
       for (let x = 0; x <= grid[0].length; x++) {
-        if (x % 5 === 0) {
+        if (x % 5 == 0) {
           ctx.beginPath()
           ctx.strokeStyle = '#000000'
           ctx.lineWidth = 1.5
@@ -340,7 +343,7 @@
       }
 
       for (let y = 0; y <= grid.length; y++) {
-        if (y % 5 === 0) {
+        if (y % 5 == 0) {
           ctx.beginPath()
           ctx.strokeStyle = '#000000'
           ctx.lineWidth = 1.5
@@ -465,7 +468,7 @@
             e.offsetX > x * dim && e.offsetX < x * dim + dim &&
             e.offsetY > y * dim && e.offsetY < y * dim + dim
           ) {
-            grid[y][x] = e.buttons === 1 ? 1 : 0
+            grid[y][x] = e.buttons == 1 ? 1 : 0
           }
         }
       }

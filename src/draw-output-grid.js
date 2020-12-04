@@ -35,7 +35,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
       ctx.fillRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
 
-      if (grid[y][x] === 2) {
+      if (grid[y][x] == 2) {
         ctx.beginPath()
         ctx.strokeStyle = '#FF0000'
         ctx.moveTo(
@@ -68,7 +68,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
     horizontalClues[y].reverse()
     for (let x = 0; x < grid[y].length / 2; x++) {
 
-      ctx.fillStyle = y % 2 === 0 ? '#DDDDDD' : '#EAEAEA'
+      ctx.fillStyle = y % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
       ctx.fillRect(
         canvas.width  / 3 - x * dim - dim, 
         canvas.height / 3 + y * dim, 
@@ -104,7 +104,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
     verticalClues[x].reverse()
     for (let y = 0; y < grid.length / 2; y++) {
 
-      ctx.fillStyle = x % 2 === 0 ? '#DDDDDD' : '#EAEAEA'
+      ctx.fillStyle = x % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
       ctx.fillRect(
         canvas.width  / 3 + x * dim, 
         canvas.height / 3 - y * dim - dim, 
@@ -136,7 +136,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
   // Deviders
   for (let x = 0; x <= grid[0].length; x++) {
-    if (x % 5 === 0) {
+    if (x % 5 == 0) {
       ctx.beginPath()
       ctx.strokeStyle = '#000000'
       ctx.lineWidth = 1.5
@@ -147,7 +147,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
   }
 
   for (let y = 0; y <= grid.length; y++) {
-    if (y % 5 === 0) {
+    if (y % 5 == 0) {
       ctx.beginPath()
       ctx.strokeStyle = '#000000'
       ctx.lineWidth = 1.5
