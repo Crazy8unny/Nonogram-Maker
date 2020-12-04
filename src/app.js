@@ -5,7 +5,7 @@ let generateClues         = require('./generate-clues')
 let handleMouseEvent      = require('./handle-mouse-event')
 let resizeGrid            = require('./resize-grid')
 let exportGrid            = require('./export-grid')
-let importGrid            = require('./import-grid')
+let generateGridFromImage = require('./generate-grid-from-image')
 let generateGridFromImage = require('./generate-grid-from-image')
 
 
@@ -21,8 +21,6 @@ let imageBtn      = container.querySelector('button[name="image"]')
 let exportJSONBtn = container.querySelector('button[name="export-json"]')
 let exportPNGBtn  = container.querySelector('button[name="export-png"]')
 let importJSONBtn  = container.querySelector('button[name="import-json"]')
-let solveModeBtn  = container.querySelector('button[name="solve-mode"]')
-
 
 let inputCanvas  = container.querySelector('#input-grid canvas') 
 let outputCanvas = container.querySelector('#output-grid canvas')
@@ -87,6 +85,26 @@ invertBtn.addEventListener('click', function(e) {
   calculate()
 })
 
+importJSONBtn.addEventListener('click', function (e) {
+  jsonInput.click()
+})
+
+jsonInput.addEventListener('change', function (e) {
+
+  if (!e.target.files.length || !e.target.accept.includes(e.target.files[0].type)) return
+
+  let fr = new FileReader()
+
+  fr.addEventListener('load', async function () {
+    grid = await generateGridFromJson(fr.result)
+    drawInputGrid(grid, inputCanvas, inputCtx)
+    calculate()
+  })
+
+  fr.readAsText(e.target.files[0])
+  jsonInput.value = "";
+})
+
 imageBtn.addEventListener('click', function(e) {
   fileInput.click()
 })
@@ -99,25 +117,12 @@ fileInput.addEventListener('change', function(e) {
 
   fr.addEventListener('load', async function() {
     grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
+    drawInputGrid(grid, inputCanvas, inputCtx)
     calculate()
   })
 
   fr.readAsDataURL(e.target.files[0])
-
-})
-
-importJSONBtn.addEventListener('click', function(e) {
-  
-  if (!e.target.files.length || !e.target.accept.includes(e.target.files[0].type)) return
-
-  let fr = new FileReader()
-
-  fr.addEventListener('load', async function() {
-    grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
-    calculate()
-  })
-
-  fr.readAsDataURL(e.target.files[0])
+  fileInput.value = "";
 })
 
 exportPNGBtn.addEventListener('click', function(e) {

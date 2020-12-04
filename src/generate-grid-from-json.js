@@ -18,4 +18,4 @@ function generateGridFromJson(src) {
   })
 }
   
-  module.exports = generateGridFromJson
+module.exports = generateGridFromJson
