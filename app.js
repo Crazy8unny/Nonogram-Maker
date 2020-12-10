@@ -143,7 +143,7 @@
     })
 
     exportJSONBtn.addEventListener('click', function (e) {
-      exportGrid(grid, 'json')
+      exportGrid(grid, 'txt')
     })
 
     function calculate() {
@@ -167,6 +167,23 @@
       drawInputGrid(grid, inputCanvas, inputCtx)
       drawOutputGrid(solvedGrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     init()
   }, { "./draw-input-grid": 2, "./draw-output-grid": 3, "./export-grid": 4, "./generate-clues": 5, "./generate-grid-from-image": 6, "./handle-mouse-event": 7, "./resize-grid": 8, "./solver": 9, "./generate-grid-from-json": 10 }], 2: [function (require, module, exports) {
@@ -395,6 +412,13 @@
 
         a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(gridString))
         a.setAttribute('download', 'nonogram.json')
+      }
+      else if (type == 'txt') {
+        let gridString = '[\n   ' + grid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
+        // gridString = gridString.replace(/1/g, "1a!s!d1");
+        // gridString = gridString.replace(/0/g, "!a1s1d!");
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(gridString))
+        a.setAttribute('download', 'nonogram.txt')
       }
 
       a.style.display = 'none'
