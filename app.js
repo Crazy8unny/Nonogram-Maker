@@ -143,7 +143,7 @@
     })
 
     exportJSONBtn.addEventListener('click', function (e) {
-      exportGrid(grid, 'txt')
+      exportGrid(grid, 'json')
     })
 
     function calculate() {
