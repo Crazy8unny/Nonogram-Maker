@@ -21,15 +21,29 @@
     let clearBtn = container.querySelector('button[name="clear"]')
     let invertBtn = container.querySelector('button[name="invert"]')
     let imageBtn = container.querySelector('button[name="image"]')
-    let exportJSONBtn = container.querySelector('button[name="export-json"]')
-    let exportPNGBtn = container.querySelector('button[name="export-png"]')
-    let importJSONBtn = container.querySelector('button[name="import-json"]')
+    let importCodeBtn = container.querySelector('button[name="importCode"]')
+    let importJSONBtn = container.querySelector('button[name="importJson"]')
+    let exportJSONBtn = container.querySelector('button[name="exportJson"]')
+    let exportPNGBtn = container.querySelector('button[name="exportPng"]')
+    let saveBtn = container.querySelector('button[name="save"]')
+
 
     let inputCanvas = container.querySelector('#input-grid canvas')
     let outputCanvas = container.querySelector('#output-grid canvas')
 
     let inputCtx = inputCanvas.getContext('2d')
     let outputCtx = outputCanvas.getContext('2d')
+
+    var firebaseConfig = {
+      apiKey: "AIzaSyDumtrL-VHq_aUzXKu2P8anOm4st3er5z8",
+      authDomain: "nonograms-db.firebaseapp.com",
+      projectId: "nonograms-db",
+      storageBucket: "nonograms-db.appspot.com",
+      messagingSenderId: "39621201819",
+      appId: "1:39621201819:web:e49002c80f7cfc9eed9b3e",
+      measurementId: "G-327GVPRSNZ"
+    };
+    let db;
 
     let grid = [
       [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
@@ -98,6 +112,71 @@
       calculate()
     })
 
+    importCodeBtn.addEventListener('click', function (e) {
+      Swal.fire({
+        title: 'Enter nonogram code:',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+          id: 'loadInput'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Start',
+        showLoaderOnConfirm: true,
+        preConfirm: (login) => {
+          try {
+            if (login == "") {
+              throw new Error("That field in required!");
+            }
+            else {
+              const server = db.doc(login);
+              return server.get().then(nonogram => {
+                nonogram = nonogram.data();
+                if (nonogram == undefined) {
+                  Swal.showValidationMessage(
+                    `Error: Nonogram not exist !`
+                  )
+                }
+                else {
+                  return (nonogram);
+                }
+              })
+            }
+          }
+          catch (error) {
+            Swal.showValidationMessage(
+              error
+            )
+          }
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then(async (result) => {
+        if (result.value.grid == undefined) {
+          Swal.fire({
+            icon: "error",
+            title: `I coulnd't find ur nonogram =,(`,
+          })
+        }
+        else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Your nonogram has been imported !',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          grid = await generateGridFromJson(result.value.grid);
+          widthInput.value = grid[0].length;
+          heightInput.value = grid.length;
+          resizeGrid(grid[0].length, grid.length, grid)
+          drawInputGrid(grid, inputCanvas, inputCtx)
+          calculate()
+        }
+      })
+    })
+
+
+
+
     importJSONBtn.addEventListener('click', function (e) {
       jsonInput.click()
     })
@@ -146,6 +225,51 @@
       exportGrid(grid, 'json')
     })
 
+    saveBtn.addEventListener('click', function (e) {
+      let gridString = '[\n   ' + grid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
+      let ogrid = [];
+      for (let row in grid) {
+        ogrid[row] = [];
+        for (let col in grid[row]) {
+          ogrid[row][col] = 0;
+        }
+      }
+      let ogridString = '[\n   ' + ogrid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
+      db.add({
+        Time: firebase.firestore.Timestamp.fromDate(new Date()),
+        grid: gridString,
+        ogrid: ogridString,
+        isSavedNonogram: false
+      })
+        .then(function (docRef) {
+          Swal.fire({
+            icon: "success",
+            title: 'your nonogram has been saved !',
+            input: 'text',
+            inputValue: docRef.id,
+            inputAttributes: {
+              autocapitalize: 'off',
+              disabled: 'true',
+              id: 'saveInput'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'copy',
+            showLoaderOnConfirm: true,
+            preConfirm: (id) => {
+              console.log(id)
+              var dummy = document.createElement("input");
+              document.body.appendChild(dummy);
+              dummy.setAttribute("id", "dummy_id");
+              document.getElementById("dummy_id").value=id;
+              dummy.select();
+              document.execCommand("copy");
+              document.body.removeChild(dummy);
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          })
+        })
+    })
+
     function calculate() {
       container.classList.add('calculating')
 
@@ -161,6 +285,11 @@
     }
 
     async function init() {
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+      db = firebase.firestore();
+      db = db.collection("Nonograms");
+
       let { horizontalClues, verticalClues } = generateClues(grid)
       let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
 

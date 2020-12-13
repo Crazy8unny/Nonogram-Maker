@@ -157,3 +157,12 @@ footer {
   grid-column: 1 / 3;
   font-size: 14px;
 }
+
+#save {
+  margin-right: 0%;
+  margin-left: 1%;
+}
+
+#loadInput, #saveInput, #dummy_id {
+  text-transform: none;
+}
