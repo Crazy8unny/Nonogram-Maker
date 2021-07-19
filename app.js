@@ -302,7 +302,7 @@
 
       // Download img
       let a = document.createElement('a')
-      let img = inputCanvas.toDataURL("image/png")
+      let img = input.toDataURL("image/png")
       a.setAttribute('href', 'data:image/png' + img)
       a.setAttribute('download', 'nonogram.png')
       a.style.display = 'none'
@@ -469,7 +469,7 @@
           )
 
           if (horizontalClues[y][x]) {
-            ctx.font = dim * 0.7 + 'px Arial'
+            ctx.font = dim * 0.55 + 'px Arial'
             ctx.fillStyle = '#000000'
             ctx.fillText(
               horizontalClues[y][x],
@@ -481,7 +481,7 @@
         }
 
         if (!horizontalClues[y].length) {
-          ctx.font = dim * 0.7 + 'px Arial'
+          ctx.font = dim * 0.55 + 'px Arial'
           ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
@@ -505,7 +505,7 @@
           )
 
           if (verticalClues[x][y]) {
-            ctx.font = dim * 0.7 + 'px Arial'
+            ctx.font = dim * 0.55 + 'px Arial'
             ctx.fillStyle = '#000000'
             ctx.fillText(
               verticalClues[x][y],
@@ -516,7 +516,7 @@
         }
 
         if (!verticalClues[x].length) {
-          ctx.font = dim * 0.7 + 'px Arial'
+          ctx.font = dim * 0.55 + 'px Arial'
           ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
