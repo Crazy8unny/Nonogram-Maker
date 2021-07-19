@@ -26,6 +26,9 @@
     let exportJSONBtn = container.querySelector('button[name="exportJson"]')
     let exportPNGBtn = container.querySelector('button[name="exportPng"]')
     let saveBtn = container.querySelector('button[name="save"]')
+    let nextBtn = container.querySelector('button[name="next"]')
+    let nextCounter = 0;
+    let historyGrids = [];
 
 
     let inputCanvas = container.querySelector('#input-grid canvas')
@@ -46,27 +49,27 @@
     let db;
 
     let grid = [
-      [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0],
-      [0,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-      [0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-      [0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0],
-      [0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0],
-      [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-      [0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1],
-      [0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1],
-      [0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1],
-      [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,1],
-      [0,0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,0,1],
-      [0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1],
-      [0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0],
-      [0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,1,1,0],
-      [0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,0,0],
-      [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,0,0],
-      [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0]
-   ]
+      [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+      [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+      [0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+      [0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+      [0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+    ]
 
     inputCanvas.addEventListener('contextmenu', function (e) {
       e.preventDefault()
@@ -260,7 +263,7 @@
               var dummy = document.createElement("input");
               document.body.appendChild(dummy);
               dummy.setAttribute("id", "dummy_id");
-              document.getElementById("dummy_id").value=id;
+              document.getElementById("dummy_id").value = id;
               dummy.select();
               document.execCommand("copy");
               document.body.removeChild(dummy);
@@ -268,6 +271,31 @@
             allowOutsideClick: () => !Swal.isLoading()
           })
         })
+    })
+
+    nextBtn.addEventListener('click', async function (e) {
+      if (nextCounter == 0) {
+        historyGrids = await db.get().then(async (nonograms) => {
+          nonograms = nonograms.docs.map(nonogram => nonogram.data());
+          if (nonograms == undefined) {
+            alert("there is no nonograms");
+          }
+          else {
+            nonograms = nonograms.sort((a, b) => b.Time - a.Time)
+            return nonograms;
+          }
+        })
+      }
+      while(historyGrids[nextCounter] != undefined && historyGrids[nextCounter].isSavedNonogram) {
+        nextCounter++;
+      }
+      grid = await generateGridFromJson(historyGrids[nextCounter].grid);
+      widthInput.value = grid[0].length;
+      heightInput.value = grid.length;
+      nextCounter++;
+      resizeGrid(grid[0].length, grid.length, grid)
+      drawInputGrid(grid, inputCanvas, inputCtx)
+      calculate()
     })
 
     function calculate() {
@@ -429,7 +457,7 @@
           )
 
           if (horizontalClues[y][x]) {
-            ctx.font = dim * 0.4 + 'px Arial'
+            ctx.font = dim * 0.7 + 'px Arial'
             ctx.fillStyle = '#000000'
             ctx.fillText(
               horizontalClues[y][x],
@@ -441,7 +469,7 @@
         }
 
         if (!horizontalClues[y].length) {
-          ctx.font = dim * 0.4 + 'px Arial'
+          ctx.font = dim * 0.7 + 'px Arial'
           ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
@@ -465,7 +493,7 @@
           )
 
           if (verticalClues[x][y]) {
-            ctx.font = dim * 0.4 + 'px Arial'
+            ctx.font = dim * 0.7 + 'px Arial'
             ctx.fillStyle = '#000000'
             ctx.fillText(
               verticalClues[x][y],
@@ -476,7 +504,7 @@
         }
 
         if (!verticalClues[x].length) {
-          ctx.font = dim * 0.4 + 'px Arial'
+          ctx.font = dim * 0.7 + 'px Arial'
           ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
