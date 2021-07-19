@@ -296,6 +296,18 @@
       resizeGrid(grid[0].length, grid.length, grid)
       drawInputGrid(grid, inputCanvas, inputCtx)
       calculate()
+
+      // Copy image to clipboard
+      // inputCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
+
+      // Download img
+      let a = document.createElement('a')
+      let img = outputCanvas.toDataURL("image/png")
+      a.setAttribute('href', 'data:image/png' + img)
+      a.setAttribute('download', 'nonogram.png')
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
     })
 
     function calculate() {
