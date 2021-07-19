@@ -308,6 +308,7 @@
       a.style.display = 'none'
       document.body.appendChild(a)
       a.click()
+      exportPNGBtn.click()
     })
 
     function calculate() {
