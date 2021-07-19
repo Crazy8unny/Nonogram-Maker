@@ -302,7 +302,7 @@
 
       // Download img
       let a = document.createElement('a')
-      let img = outputCanvas.toDataURL("image/png")
+      let img = inputCanvas.toDataURL("image/png")
       a.setAttribute('href', 'data:image/png' + img)
       a.setAttribute('download', 'nonogram.png')
       a.style.display = 'none'
